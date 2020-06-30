@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:save_the_planet/card_model.dart';
 import 'package:save_the_planet/data.dart';
 
 void main() {
@@ -31,21 +30,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<CardModel> cards = getCards();
-
+  List<Card> cards = getCards();
+  _CardState previousClick;
   @override
   void initState() {
+    previousClick = _CardState();
     super.initState();
-    Timer(
-      Duration(seconds: 5),
-      () {
-        for (CardModel card in cards) {
-          card.setIsUncovered(false);
-          card.setIsClickable(true);
+  }
+
+  void handleClick(_CardState source) {
+    try {
+      if (previousClick.widget.getIsUncovered()) {
+        print('second click');
+        source.setState(() {
+          source.widget.setIsUncovered(true);
+          source.widget.setIsClickable(false);
+        });
+        if (source.widget.getImagePath() ==
+            previousClick.widget.getImagePath()) {
+          previousClick = _CardState();
+        } else {
+          source.setState(() {
+            source.widget.setIsUncovered(false);
+            source.widget.setIsClickable(true);
+          });
+          previousClick.setState(() {
+            previousClick.widget.setIsUncovered(false);
+            previousClick.widget.setIsClickable(true);
+          });
+          previousClick = _CardState();
         }
-        setState(() {});
-      },
-    );
+      }
+    } catch (e) {
+      print('first click');
+      source.setState(() {
+        source.widget.setIsUncovered(true);
+        source.widget.setIsClickable(false);
+      });
+      previousClick = source;
+    }
   }
 
   @override
@@ -62,14 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: List.generate(
             cards.length,
             (index) {
-              //print(index.toString()+'\t'+(cards[index].getImagePath()));
-              return Card(
-                imagePath: cards[index].getImagePath(),
-                isClickable: cards[index].getIsClickable(),
-                isUncovered: cards[index].getIsUncovered(),
-                index: index,
-                parent: this,
-              );
+              cards[index].setIsUncovered(true);
+              cards[index].setIsClickable(false);
+              cards[index].setIndex(index);
+              cards[index].setParent(this);
+              return cards[index];
             },
           ),
         ),
@@ -78,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// ignore: must_be_immutable
 class Card extends StatefulWidget {
   String imagePath;
   bool isClickable;
@@ -95,6 +116,47 @@ class Card extends StatefulWidget {
       this.index,
       this.parent})
       : super(key: key);
+
+  void setImagePath(String path) {
+    this.imagePath = path;
+  }
+
+  void setIsClickable(bool val) {
+    this.isClickable = val;
+  }
+
+  void setIsUncovered(bool val) {
+    this.isUncovered = val;
+  }
+
+  void setIndex(int val) {
+    this.index = val;
+  }
+
+  void setParent(_MyHomePageState val) {
+    this.parent = val;
+  }
+
+  String getImagePath() {
+    return this.imagePath;
+  }
+
+  bool getIsClickable() {
+    return this.isClickable;
+  }
+
+  bool getIsUncovered() {
+    return this.isUncovered;
+  }
+
+  int getIndex() {
+    return this.index;
+  }
+
+  _MyHomePageState getParent() {
+    return this.parent;
+  }
+
   @override
   _CardState createState() => _CardState();
 }
@@ -103,84 +165,24 @@ class _CardState extends State<Card> {
   @override
   void initState() {
     super.initState();
-  }
-
-  int countUncoveredCards() {
-    int count = 0;
-    for (CardModel card in widget.parent.cards) {
-      if (card.getIsUncovered()) {
-        count++;
-        break;
-      }
-    }
-    return count;
+    Timer(
+      Duration(seconds: 5),
+      () {
+        setState(() {
+          widget.setIsUncovered(false);
+          widget.setIsClickable(true);
+        });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('card '+widget.index.toString());
-    print('clickable : '+widget.isClickable.toString());
-    print('uncovered : '+widget.isUncovered.toString());
-    print(widget.imagePath);
-    print('\n');
     return GestureDetector(
       onTap: () {
         if (widget.isClickable) {
-          print('clicked me');
-          if (countUncoveredCards() == 0) {
-            print('first tile');
-            print(widget.index);
-            widget.parent.setState(() {
-              widget.parent.cards[widget.index].setIsUncovered(true);
-              widget.parent.cards[widget.index].setIsClickable(false);
-            });
-            /*setState(() {
-              widget.isUncovered = true;
-              widget.isClickable = false;
-            });*/
-            setState(() {
-              widget.previousSelection = widget;
-            });
-          } else {
-            print('second tile');
-            if (widget.imagePath == widget.previousSelection.imagePath) {
-              print('correct');
-              widget.parent.setState(() {
-              widget.parent.cards[widget.index].setIsUncovered(true);
-              widget.parent.cards[widget.index].setIsClickable(false);
-            });
-              setState(() {
-                widget.isUncovered = true;
-                widget.isClickable = false;
-                widget.previousSelection = Card();
-              });
-            } else {
-              print('wrong');
-              setState(() {
-                widget.isUncovered = true;
-              });
-              Timer(
-                Duration(seconds: 2),
-                () {
-                  for (var card in widget.parent.cards) {
-                    if (card.getImagePath() == widget.imagePath) {
-                      card.setIsClickable(true);
-                      card.setIsUncovered(false);
-                    }
-                  }
-
-                  widget.parent.setState(() {});
-                  setState(() {
-                    widget.previousSelection = Card();
-                  });
-                },
-              );
-            }
-          }
-          /*setState(() {
-            widget.isUncovered = true;
-          });*/
-          print(widget.imagePath);
+          print('clicked ' + widget.index.toString());
+          widget.parent.handleClick(this);
         }
       },
       child: Container(

@@ -1,96 +1,87 @@
-import 'package:save_the_planet/card_model.dart';
+import 'package:save_the_planet/main.dart';
 
-List<CardModel> getCards() {
-  List<CardModel> cards = new List<CardModel>();
-  CardModel card;
+List<Card> getCards() {
+  List<Card> cards = new List<Card>();
+  Card card;
 
-  card = new CardModel();
-
+  card = new Card();
   card.setImagePath('assets/1.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/1.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/2.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/2.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/3.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/3.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/4.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/4.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/5.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/5.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/6.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/6.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/7.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/7.PNG');
+  cards.add(card);
+
+  card = new Card();
   card.setImagePath('assets/8.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/8.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/9.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
-  cards.add(card);
   cards.add(card);
 
-  card = new CardModel();
+  card = new Card();
+  card.setImagePath('assets/9.PNG');
+  cards.add(card);
 
+  card = new Card();
   card.setImagePath('assets/10.PNG');
-  card.setIsClickable(false);
-  card.setIsUncovered(true);
-
   cards.add(card);
+
+  card = new Card();
+  card.setImagePath('assets/10.PNG');
   cards.add(card);
 
   cards.shuffle();
