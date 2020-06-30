@@ -32,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Card> cards = getCards();
   _CardState previousClick;
+  String click = "";
   @override
   void initState() {
     previousClick = _CardState();
@@ -41,28 +42,34 @@ class _MyHomePageState extends State<MyHomePage> {
   void handleClick(_CardState source) {
     try {
       if (previousClick.widget.getIsUncovered()) {
-        print('second click');
-        source.setState(() {
-          source.widget.setIsUncovered(true);
-          source.widget.setIsClickable(false);
-        });
-        if (source.widget.getImagePath() ==
-            previousClick.widget.getImagePath()) {
-          previousClick = _CardState();
-        } else {
+        if (click == 'first click') {
+          print('second click');
+          click = 'second click';
           source.setState(() {
-            source.widget.setIsUncovered(false);
-            source.widget.setIsClickable(true);
+            source.widget.setIsUncovered(true);
+            source.widget.setIsClickable(false);
           });
-          previousClick.setState(() {
-            previousClick.widget.setIsUncovered(false);
-            previousClick.widget.setIsClickable(true);
+          Timer(Duration(milliseconds: 1000), () {
+            if (source.widget.getImagePath() ==
+                previousClick.widget.getImagePath()) {
+              previousClick = _CardState();
+            } else {
+              source.setState(() {
+                source.widget.setIsUncovered(false);
+                source.widget.setIsClickable(true);
+              });
+              previousClick.setState(() {
+                previousClick.widget.setIsUncovered(false);
+                previousClick.widget.setIsClickable(true);
+              });
+              previousClick = _CardState();
+            }
           });
-          previousClick = _CardState();
         }
       }
     } catch (e) {
       print('first click');
+      click = 'first click';
       source.setState(() {
         source.widget.setIsUncovered(true);
         source.widget.setIsClickable(false);
